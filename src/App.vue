@@ -8,13 +8,13 @@
       </ul>
     </div>
 
-    <Container :posts="posts"/>
-
+    <Container :posts="posts" :steps="steps" :fileImageUrl="fileImageUrl"/>
+    
     <button class="btn btn-light center" @click="showMore">더보기</button>
     
     <div class="footer">
       <ul class="footer-button-plus">
-        <input type="file" id="file" class="inputfile" />
+        <input @change="uploadImage" type="file" id="file" class="inputfile" accept="image/*"/>
         <label for="file" class="input-plus">+</label>
       </ul>
   </div>
@@ -33,17 +33,23 @@ export default {
   data() {
     return {
       posts:posts,
-      showMoreCnt:0
+      showMoreCnt:0,
+      steps:1,
+      fileImageUrl:''
     }
   },methods:{
         showMore(){
             axios.get(`https://codingapple1.github.io/vue/more${this.showMoreCnt}.json`).then((result)=>{
-                console.log(this.posts.push(result.data))
+                this.posts.push(result.data)
                 this.showMoreCnt+=1
             }).catch((err)=>{
                 alert('게시물이 더이상 없습니다.')
                 console.log(err)
             })
+        },
+        uploadImage(e){
+          const file=e.target.files[0];
+          this.fileImageUrl=URL.createObjectURL(file)//1.BLOB은 image파일의 binary객체 (이동용기) 2.createObjectURL는 이미지의 url을 임시로만들어줌
         }
     }
 }
@@ -68,10 +74,10 @@ ul {
 }
 .header {
   width: 100%;
-  height: 40px;
+  height: 45px;
   background-color: white;
   padding-bottom: 8px;
-  position: sticky;
+  position: sticky;/** fixed와의 차이 : 지정한 top에 오면 고정됨 */
   top: 0;
 }
 .header-button-left {
@@ -95,6 +101,7 @@ ul {
   bottom: 0;
   padding-bottom: 10px;
   background-color: white;
+  margin-top:10px;
 }
 .footer-button-plus {
   width: 80px;
@@ -119,6 +126,7 @@ ul {
 /* relative:현재엘리멘트기준 absolute:부모의위치(relative,static등..)기준 */
 position: relative;
 left: 50%;
+top: 25px;
 transform: translate(-50%,-50%);
 }
 </style>

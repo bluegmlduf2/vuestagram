@@ -43,7 +43,8 @@ export default {
 }
 .post-header {
   height: 30px;
-  padding: 10px;
+  margin: 5px;
+  margin-top: 20px;
 }
 .post-body {
   background-image: url("https://placeimg.com/640/480/animals");
