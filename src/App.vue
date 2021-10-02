@@ -9,7 +9,7 @@
       </ul>
     </div>
 
-    <Container :posts="posts" :steps="steps" :fileImageUrl="fileImageUrl" :content="content" @inputContent="content=$event"/>
+    <Container :posts="posts" :steps="steps" :fileImageUrl="fileImageUrl" :content="content" @inputContent="content=$event" :filter="filter"/>
     
     <button class="btn btn-light center" v-if="steps==0" @click="showMore">더보기</button>
     
@@ -39,7 +39,8 @@ export default {
       showMoreCnt:0,
       steps:0,
       fileImageUrl:defaultImagePath,
-      content:'write'
+      content:'please write here!',
+      filter:''
     }
   },methods:{
         showMore(){
@@ -56,7 +57,6 @@ export default {
           this.fileImageUrl=URL.createObjectURL(file)//1.BLOB은 image파일의 binary객체 (이동용기) 2.createObjectURL는 이미지의 url을 임시로만들어줌
         },
         publish(){
-          console.log(this.content)
           if(this.fileImageUrl==defaultImagePath){
             alert('이미지를 선택해주세요.');
             return
@@ -69,13 +69,19 @@ export default {
             date: "May 15",
             liked: false,
             content: this.content,
-            filter: "perpetua"
+            filter: this.filter
           }
           this.posts.unshift(myPost);
           this.steps=0;
           this.fileImageUrl=defaultImagePath;
-        }
-    }
+        },
+    },
+    mounted() {
+      //emitter 데이터 수신 (에미터의 수신은 mounted에서 사용하는게 일반적),(안쓰는 이유는 중복선언때문)
+      this.emitter.on('changeFilter',(e)=>{
+        this.filter=e;
+      })
+    },
 }
 </script>
 

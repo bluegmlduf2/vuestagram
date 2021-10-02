@@ -1,6 +1,6 @@
 <template>
 <!-- 기존 css + 변수로 css추가 or :class="변수명"-->
-    <div :class="filterName+' filter-item'" :style="{backgroundImage:`url(${fileImageUrl})`}">
+    <div @click="changeFilter" :class="filterName+' filter-item'" :style="{backgroundImage:`url(${fileImageUrl})`}">
       <span class="filterName">
           <!-- slot문법  -->
           <slot name="a"></slot><br>
@@ -15,6 +15,12 @@ export default {
     props:{
         fileImageUrl:String,
         filterName:String
+    },
+    methods:{
+        changeFilter(){
+            //emitter 보내는 쪽
+            this.emitter.emit('changeFilter', this.filterName);
+        }
     }
 }
 </script>

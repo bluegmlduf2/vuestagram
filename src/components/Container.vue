@@ -6,7 +6,7 @@
 
     <!-- 필터선택페이지 -->
     <div v-if="steps == 1" >
-      <div class="upload-image" :style="{backgroundImage:`url(${fileImageUrl})`}"></div>
+      <div :class="filter" class="upload-image" :style="{backgroundImage:`url(${fileImageUrl})`}"></div>
       <div class="filters">
         <FilterBox v-for="(elem, idx) in filterNames" :key="idx" :filterName="elem" :fileImageUrl="fileImageUrl">
           <!-- slot문법  -->
@@ -18,7 +18,7 @@
 
     <!-- 글작성페이지 -->
     <div v-if="steps == 2">
-      <div class="upload-image" :style="{backgroundImage:`url(${fileImageUrl})`}"></div>
+      <div :class="filter" class="upload-image" :style="{backgroundImage:`url(${fileImageUrl})`}"></div>
       <div class="write">
         <textarea @keyup="inputComment" class="write-box" :value="content"></textarea>
       </div>
@@ -46,13 +46,14 @@ export default {
     posts: Array,
     steps:Number,
     fileImageUrl:String,
-    content:String
+    content:String,
+    filter:String
   },
   methods:{
     inputComment($event){
       this.$emit('inputContent',$event.target.value)
     }
-  }
+  },
 };
 </script>
 
