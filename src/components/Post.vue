@@ -4,9 +4,9 @@
       <div class="profile" :style="{backgroundImage:`url(${post.userImage})`}"></div>
       <span class="profile-name">{{post.name}}</span>
     </div>
-    <div class="post-body" :class="post.filter" :style="{backgroundImage:`url(${post.postImage})`}"></div>
+    <div @dblclick="changeLike" class="post-body" :class="post.filter" :style="{backgroundImage:`url(${post.postImage})`}"></div>
     <div class="post-content">
-      <p>{{post.likes}} Likes</p>
+      <p>{{this.$store.state.like}} Likes</p>
       <p><strong>글쓴이아이디</strong> {{post.content}}</p>
       <p class="date">{{post.date}}</p>
     </div>
@@ -17,7 +17,16 @@
 export default {
     name:"Post",
     props:{
-        post:Object
+      post:Object
+    },
+    methods:{
+      changeLike(){
+        if (!this.$store.state.selectedLike) {
+          this.$store.commit('addLike');
+        }else{
+          this.$store.commit('removeLike');
+        }
+      }
     }
 }
 </script>
