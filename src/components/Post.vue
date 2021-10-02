@@ -49,8 +49,10 @@ export default {
 .post-body {
   background-image: url("https://placeimg.com/640/480/animals");
   height: 450px;
-  background-position: center;
   background-size: cover;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-color: #ffffff;
 }
 .post-content {
   padding-left: 15px;

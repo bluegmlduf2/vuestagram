@@ -1,21 +1,22 @@
 <template>
   <div class="header">
       <ul class="header-button-left">
-        <li>Cancel</li>
+        <li v-if="steps!=0" @click="steps--">back</li>
       </ul>
       <ul class="header-button-right">
-        <li>Next</li>
+        <li v-if="steps<2" @click="steps++">Next</li>
+        <li v-if="steps==2" @click="publish">발행</li>
       </ul>
     </div>
 
-    <Container :posts="posts" :steps="steps" :fileImageUrl="fileImageUrl"/>
+    <Container :posts="posts" :steps="steps" :fileImageUrl="fileImageUrl" :content="content" @inputContent="content=$event"/>
     
-    <button class="btn btn-light center" @click="showMore">더보기</button>
+    <button class="btn btn-light center" v-if="steps==0" @click="showMore">더보기</button>
     
     <div class="footer">
-      <ul class="footer-button-plus">
+      <ul v-if="steps==1" class="footer-button-plus">
         <input @change="uploadImage" type="file" id="file" class="inputfile" accept="image/*"/>
-        <label for="file" class="input-plus">+</label>
+        <label for="file" class="input-plus" >+</label>
       </ul>
   </div>
 </template>
@@ -24,6 +25,8 @@
 import Container from './components/Container.vue'
 import posts from './assets/posts'
 import axios from 'axios';
+
+const defaultImagePath='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
 export default {
   name: 'App',
@@ -34,8 +37,9 @@ export default {
     return {
       posts:posts,
       showMoreCnt:0,
-      steps:1,
-      fileImageUrl:''
+      steps:0,
+      fileImageUrl:defaultImagePath,
+      content:'write'
     }
   },methods:{
         showMore(){
@@ -50,6 +54,26 @@ export default {
         uploadImage(e){
           const file=e.target.files[0];
           this.fileImageUrl=URL.createObjectURL(file)//1.BLOB은 image파일의 binary객체 (이동용기) 2.createObjectURL는 이미지의 url을 임시로만들어줌
+        },
+        publish(){
+          console.log(this.content)
+          if(this.fileImageUrl==defaultImagePath){
+            alert('이미지를 선택해주세요.');
+            return
+          }
+          const myPost={
+            name: "Test Yoon",
+            userImage: "https://placeimg.com/100/100/arch",
+            postImage: this.fileImageUrl,
+            likes: 1,
+            date: "May 15",
+            liked: false,
+            content: this.content,
+            filter: "perpetua"
+          }
+          this.posts.unshift(myPost);
+          this.steps=0;
+          this.fileImageUrl=defaultImagePath;
         }
     }
 }

@@ -8,11 +8,11 @@
     <div v-if="steps == 1" >
       <div class="upload-image" :style="{backgroundImage:`url(${fileImageUrl})`}"></div>
       <div class="filters">
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
+        <FilterBox v-for="(elem, idx) in filterNames" :key="idx" :filterName="elem" :fileImageUrl="fileImageUrl">
+          <!-- slot문법  -->
+          <template v-slot:a>필터명</template>
+          <template v-slot:b>{{elem}}</template>
+        </FilterBox>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
     <div v-if="steps == 2">
       <div class="upload-image" :style="{backgroundImage:`url(${fileImageUrl})`}"></div>
       <div class="write">
-        <textarea class="write-box">write!</textarea>
+        <textarea @keyup="inputComment" class="write-box" :value="content"></textarea>
       </div>
     </div>
   </div>
@@ -28,17 +28,31 @@
 
 <script>
 import Post from "./Post.vue";
+import FilterBox from "./FilterBox.vue";
+import filterNames from "/src/assets/instaFilterName.js"
 
 export default {
   name: "Container",
   components: {
     Post: Post,
+    FilterBox: FilterBox,
+  },
+  data() {
+    return {
+      filterNames: filterNames
+    }
   },
   props: {
     posts: Array,
     steps:Number,
-    fileImageUrl:String
+    fileImageUrl:String,
+    content:String
   },
+  methods:{
+    inputComment($event){
+      this.$emit('inputContent',$event.target.value)
+    }
+  }
 };
 </script>
 
@@ -47,22 +61,14 @@ export default {
 .upload-image {
   width: 100%;
   height: 450px;
-  background: cornflowerblue;
-  background-size: cover;
+  background-size: contain;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-color: #ffffff;
 }
 .filters {
   overflow-x: scroll;
   white-space: nowrap;
-}
-.filter-1 {
-  width: 100px;
-  height: 100px;
-  background-color: cornflowerblue;
-  margin: 10px 10px 10px auto;
-  padding: 8px;
-  display: inline-block;
-  color: white;
-  background-size: cover;
 }
 .filters::-webkit-scrollbar {
   height: 5px;
