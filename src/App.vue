@@ -89,8 +89,12 @@ export default {
         this.filter=e;
       })
     },
-    // this.$store.state의 변수를 축약해서 사용하기
+    // this.$store.state의 변수를 축약해서 사용하기 , 최초 1회만 실행됨.
     computed:{
+      //now() 함수는 최초의 로딩될때 시간만 반환하게됨
+      now(){
+       return new Date(); 
+      },
       like(){
         return this.$store.state.like
       },
