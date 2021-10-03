@@ -3,6 +3,7 @@
       <ul class="header-button-left">
         <li v-if="steps!=0" @click="steps--">back</li>
       </ul>
+      <img src="./assets/logo.png" class="logo">
       <ul class="header-button-right">
         <li v-if="steps<2" @click="steps++">Next</li>
         <li v-if="steps==2" @click="publish">발행</li>
@@ -11,7 +12,8 @@
 
     <Container :posts="posts" :steps="steps" :fileImageUrl="fileImageUrl" :content="content" @inputContent="content=$event" :filter="filter"/>
     
-    <button class="btn btn-light center" v-if="steps==0" @click="showMore">더보기</button>
+    <button class="btn btn-light center" v-if="steps==0" @click="showMore">더보기(일반)</button>
+    <button class="btn btn-light centerVuex" v-if="steps==0" @click="showMoreVuex">더보기(vuex이용)</button>
     
     <div class="footer">
       <ul v-if="steps==1" class="footer-button-plus">
@@ -24,7 +26,8 @@
 <script>
 import Container from './components/Container.vue'
 import posts from './assets/posts'
-import axios from 'axios';
+import axios from 'axios'
+import {mapState} from 'vuex'
 
 const defaultImagePath='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
@@ -75,6 +78,10 @@ export default {
           this.steps=0;
           this.fileImageUrl=defaultImagePath;
         },
+        // vuex ajax예제
+        showMoreVuex(){
+          this.$store.dispatch('showMoreVuex');
+        }
     },
     mounted() {
       //emitter 데이터 수신 (에미터의 수신은 mounted에서 사용하는게 일반적),(안쓰는 이유는 중복선언때문)
@@ -82,6 +89,13 @@ export default {
         this.filter=e;
       })
     },
+    // this.$store.state의 변수를 축약해서 사용하기
+    computed:{
+      like(){
+        return this.$store.state.like
+      },
+      ...mapState(['selectedLike','moreDataVuex'])
+    }
 }
 </script>
 
@@ -158,5 +172,12 @@ position: relative;
 left: 50%;
 top: 25px;
 transform: translate(-50%,-50%);
+}
+.centerVuex{
+/* relative:현재엘리멘트기준 absolute:부모의위치(relative,static등..)기준 */
+position: relative;
+left: 60%;
+top: 25px;
+transform: translate(-60%,-60%);
 }
 </style>
